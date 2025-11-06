@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutorial Interactivo - Python Firebase Web App</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .tutorial-step {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        .tutorial-step.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+        .step-dot {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .step-dot.active {
+            background: #0d6efd;
+            color: white;
+        }
+        .step-dot.completed {
+            background: #198754;
+            color: white;
+        }
+        .code-block {
+            background: #f8f9fa;
+            border-left: 4px solid #0d6efd;
+            padding: 1rem;
+            border-radius: 4px;
+        }
+        .highlight-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+        .interactive-demo {
+            background: #e7f3ff;
+            border: 2px dashed #0d6efd;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-graduation-cap"></i> Tutorial Interactivo
+            </a>
+            <div>
+                <a href="/" class="btn btn-outline-light btn-sm me-2">Inicio</a>
+                <a href="/practice" class="btn btn-outline-light btn-sm">Práctica</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4 mb-5">
+        <div class="text-center mb-4">
+            <h1><i class="fas fa-book"></i> Tutorial: Aprende Flask y Firebase</h1>
+            <p class="lead">Guía paso a paso interactiva para entender cómo funciona esta aplicación</p>
+        </div>
+
+        <!-- Step Indicators -->
+        <div class="step-indicator">
+            <div class="step-dot active" data-step="0">
+                <i class="fas fa-1"></i>
+            </div>
+            <div class="step-dot" data-step="1">
+                <i class="fas fa-2"></i>
+            </div>
+            <div class="step-dot" data-step="2">
+                <i class="fas fa-3"></i>
+            </div>
+            <div class="step-dot" data-step="3">
+                <i class="fas fa-4"></i>
+            </div>
+            <div class="step-dot" data-step="4">
+                <i class="fas fa-5"></i>
+            </div>
+        </div>
+
+        <!-- Step 1: Introducción -->
+        <div class="tutorial-step active" data-step="0">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3><i class="fas fa-info-circle"></i> Paso 1: Introducción</h3>
+                </div>
+                <div class="card-body">
+                    <h4>¿Qué es esta aplicación?</h4>
+                    <p>Esta es una aplicación web construida con <strong>Flask</strong> (framework de Python) que utiliza <strong>Firebase Realtime Database</strong> para almacenar y gestionar datos de usuarios.</p>
+                    
+                    <div class="highlight-box">
+                        <strong><i class="fas fa-lightbulb"></i> Conceptos clave:</strong>
+                        <ul class="mb-0 mt-2">
+                            <li><strong>Flask:</strong> Framework web ligero de Python</li>
+                            <li><strong>Firebase:</strong> Plataforma de Google para bases de datos en tiempo real</li>
+                            <li><strong>CRUD:</strong> Create, Read, Update, Delete (operaciones básicas de datos)</li>
+                        </ul>
+                    </div>
+
+                    <div class="interactive-demo">
+                        <h5><i class="fas fa-play-circle"></i> Prueba esto:</h5>
+                        <p>Haz clic en el botón de abajo para ver cómo se estructura la aplicación:</p>
+                        <button class="btn btn-primary" onclick="showArchitecture()">
+                            <i class="fas fa-sitemap"></i> Ver Arquitectura
+                        </button>
+                        <div id="architecture" style="display: none; margin-top: 1rem;">
+                            <div class="code-block">
+                                <strong>Estructura de la App:</strong><br>
+                                Cliente (Navegador) → Flask (Servidor Python) → Firebase (Base de Datos)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 2: Flask Routes -->
+        <div class="tutorial-step" data-step="1">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h3><i class="fas fa-route"></i> Paso 2: Rutas de Flask</h3>
+                </div>
+                <div class="card-body">
+                    <h4>¿Qué son las rutas?</h4>
+                    <p>Las rutas definen las URLs que los usuarios pueden visitar en tu aplicación. Cada ruta está asociada a una función que se ejecuta cuando se accede a esa URL.</p>
+                    
+                    <div class="code-block">
+                        <strong>Ejemplo de ruta:</strong><br>
+                        <code>@app.route('/')</code><br>
+                        <code>def index():</code><br>
+                        <code>&nbsp;&nbsp;&nbsp;&nbsp;return render_template('index.html')</code>
+                    </div>
+
+                    <h5 class="mt-4">Rutas en esta aplicación:</h5>
+                    <ul>
+                        <li><code>/</code> - Página principal (lista de usuarios)</li>
+                        <li><code>/add_user</code> - Añade un nuevo usuario (POST)</li>
+                        <li><code>/delete_user/&lt;id&gt;</code> - Elimina un usuario (POST)</li>
+                        <li><code>/tutorial</code> - Esta página de tutorial</li>
+                        <li><code>/practice</code> - Página de ejercicios</li>
+                    </ul>
+
+                    <div class="interactive-demo">
+                        <h5><i class="fas fa-code"></i> Prueba interactiva:</h5>
+                        <p>Selecciona una ruta para ver qué hace:</p>
+                        <select class="form-select" id="routeSelect" onchange="explainRoute()">
+                            <option value="">Selecciona una ruta...</option>
+                            <option value="index">/ (index)</option>
+                            <option value="add">/add_user</option>
+                            <option value="delete">/delete_user</option>
+                        </select>
+                        <div id="routeExplanation" class="mt-3" style="display: none;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3: Firebase Integration -->
+        <div class="tutorial-step" data-step="2">
+            <div class="card shadow">
+                <div class="card-header bg-warning text-dark">
+                    <h3><i class="fas fa-database"></i> Paso 3: Integración con Firebase</h3>
+                </div>
+                <div class="card-body">
+                    <h4>¿Cómo funciona Firebase?</h4>
+                    <p>Firebase Realtime Database es una base de datos NoSQL que almacena datos en formato JSON y se actualiza en tiempo real.</p>
+                    
+                    <div class="code-block">
+                        <strong>Estructura de datos en Firebase:</strong><br>
+                        <pre>{
+  "users": {
+    "user1": {
+      "name": "Juan",
+      "email": "juan@example.com"
+    },
+    "user2": {
+      "name": "María",
+      "email": "maria@example.com"
+    }
+  }
+}</pre>
+                    </div>
+
+                    <h5 class="mt-4">Operaciones principales:</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h6><i class="fas fa-plus-circle text-success"></i> Crear (Create)</h6>
+                                    <code>ref.child('users').push().set({...})</code>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h6><i class="fas fa-eye text-primary"></i> Leer (Read)</h6>
+                                    <code>ref.child('users').get()</code>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h6><i class="fas fa-edit text-warning"></i> Actualizar (Update)</h6>
+                                    <code>ref.child('users').child(id).update({...})</code>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h6><i class="fas fa-trash text-danger"></i> Eliminar (Delete)</h6>
+                                    <code>ref.child('users').child(id).delete()</code>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="interactive-demo">
+                        <h5><i class="fas fa-flask"></i> Simulación de operación:</h5>
+                        <button class="btn btn-success" onclick="simulateCreate()">
+                            <i class="fas fa-plus"></i> Simular Crear Usuario
+                        </button>
+                        <button class="btn btn-primary" onclick="simulateRead()">
+                            <i class="fas fa-search"></i> Simular Leer Usuarios
+                        </button>
+                        <div id="simulationResult" class="mt-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 4: Templates -->
+        <div class="tutorial-step" data-step="3">
+            <div class="card shadow">
+                <div class="card-header bg-info text-white">
+                    <h3><i class="fas fa-file-code"></i> Paso 4: Templates HTML</h3>
+                </div>
+                <div class="card-body">
+                    <h4>¿Qué son los templates?</h4>
+                    <p>Los templates son archivos HTML que Flask puede renderizar dinámicamente usando el motor de plantillas Jinja2.</p>
+                    
+                    <div class="code-block">
+                        <strong>Sintaxis Jinja2:</strong><br>
+                        <code>{% raw %}{% for user in users %}{% endraw %}</code> - Bucle for<br>
+                        <code>{% raw %}{{ user.name }}{% endraw %}</code> - Mostrar variable<br>
+                        <code>{% raw %}{% if condition %}{% endraw %}</code> - Condicional
+                    </div>
+
+                    <h5 class="mt-4">Ejemplo práctico:</h5>
+                    <div class="code-block">
+                        <pre>&lt;table&gt;
+  {% raw %}{% for user in users %}{% endraw %}
+  &lt;tr&gt;
+    &lt;td&gt;{% raw %}{{ user.name }}{% endraw %}&lt;/td&gt;
+    &lt;td&gt;{% raw %}{{ user.email }}{% endraw %}&lt;/td&gt;
+  &lt;/tr&gt;
+  {% raw %}{% endfor %}{% endraw %}
+&lt;/table&gt;</pre>
+                    </div>
+
+                    <div class="highlight-box">
+                        <strong><i class="fas fa-exclamation-triangle"></i> Importante:</strong>
+                        <p class="mb-0">Los templates deben estar en la carpeta <code>templates/</code> para que Flask los encuentre automáticamente.</p>
+                    </div>
+
+                    <div class="interactive-demo">
+                        <h5><i class="fas fa-magic"></i> Generador de template:</h5>
+                        <p>Ingresa datos y ve cómo se renderizarían:</p>
+                        <input type="text" class="form-control mb-2" id="templateName" placeholder="Nombre">
+                        <input type="email" class="form-control mb-2" id="templateEmail" placeholder="Email">
+                        <button class="btn btn-info" onclick="renderTemplate()">
+                            <i class="fas fa-code"></i> Renderizar
+                        </button>
+                        <div id="templateOutput" class="mt-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 5: Flujo Completo -->
+        <div class="tutorial-step" data-step="4">
+            <div class="card shadow">
+                <div class="card-header bg-danger text-white">
+                    <h3><i class="fas fa-project-diagram"></i> Paso 5: Flujo Completo</h3>
+                </div>
+                <div class="card-body">
+                    <h4>¿Cómo funciona todo junto?</h4>
+                    <p>Veamos el flujo completo cuando un usuario añade un nuevo registro:</p>
+                    
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h5><i class="fas fa-1"></i> Usuario llena el formulario</h5>
+                            <p class="mb-0">El usuario ingresa nombre y email en el formulario HTML.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mb-3">
+                        <i class="fas fa-arrow-down fa-2x text-primary"></i>
+                    </div>
+                    
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h5><i class="fas fa-2"></i> Formulario envía POST a /add_user</h5>
+                            <p class="mb-0">El navegador envía los datos al servidor Flask mediante HTTP POST.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mb-3">
+                        <i class="fas fa-arrow-down fa-2x text-primary"></i>
+                    </div>
+                    
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h5><i class="fas fa-3"></i> Flask procesa la petición</h5>
+                            <p class="mb-0">La función <code>add_user()</code> recibe los datos y los guarda en Firebase.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mb-3">
+                        <i class="fas fa-arrow-down fa-2x text-primary"></i>
+                    </div>
+                    
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h5><i class="fas fa-4"></i> Firebase guarda los datos</h5>
+                            <p class="mb-0">Los datos se almacenan en la base de datos en tiempo real.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mb-3">
+                        <i class="fas fa-arrow-down fa-2x text-primary"></i>
+                    </div>
+                    
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h5><i class="fas fa-5"></i> Redirección a página principal</h5>
+                            <p class="mb-0">El usuario es redirigido a <code>/</code> donde ve la lista actualizada.</p>
+                        </div>
+                    </div>
+
+                    <div class="interactive-demo">
+                        <h5><i class="fas fa-play"></i> Simulación completa:</h5>
+                        <button class="btn btn-danger btn-lg" onclick="simulateFullFlow()">
+                            <i class="fas fa-play-circle"></i> Ejecutar Simulación Completa
+                        </button>
+                        <div id="fullFlowSimulation" class="mt-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="d-flex justify-content-between mt-4">
+            <button class="btn btn-secondary" id="prevBtn" onclick="changeStep(-1)" disabled>
+                <i class="fas fa-arrow-left"></i> Anterior
+            </button>
+            <button class="btn btn-primary" id="nextBtn" onclick="changeStep(1)">
+                Siguiente <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="/practice" class="btn btn-success btn-lg">
+                <i class="fas fa-dumbbell"></i> Ir a Ejercicios Prácticos
+            </a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let currentStep = 0;
+        const totalSteps = 5;
+
+        function changeStep(direction) {
+            const newStep = currentStep + direction;
+            if (newStep >= 0 && newStep < totalSteps) {
+                // Hide current step
+                document.querySelector(`.tutorial-step[data-step="${currentStep}"]`).classList.remove('active');
+                document.querySelector(`.step-dot[data-step="${currentStep}"]`).classList.remove('active');
+                
+                // Mark as completed
+                if (direction > 0) {
+                    document.querySelector(`.step-dot[data-step="${currentStep}"]`).classList.add('completed');
+                }
+                
+                currentStep = newStep;
+                
+                // Show new step
+                document.querySelector(`.tutorial-step[data-step="${currentStep}"]`).classList.add('active');
+                document.querySelector(`.step-dot[data-step="${currentStep}"]`).classList.add('active');
+                
+                // Update buttons
+                document.getElementById('prevBtn').disabled = currentStep === 0;
+                document.getElementById('nextBtn').disabled = currentStep === totalSteps - 1;
+            }
+        }
+
+        // Step dots clickable
+        document.querySelectorAll('.step-dot').forEach(dot => {
+            dot.addEventListener('click', function() {
+                const step = parseInt(this.dataset.step);
+                if (step !== currentStep) {
+                    const direction = step > currentStep ? 1 : -1;
+                    while (currentStep !== step) {
+                        changeStep(direction);
+                    }
+                }
+            });
+        });
+
+        function showArchitecture() {
+            const arch = document.getElementById('architecture');
+            arch.style.display = arch.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function explainRoute() {
+            const select = document.getElementById('routeSelect');
+            const explanation = document.getElementById('routeExplanation');
+            const value = select.value;
+            
+            const explanations = {
+                'index': '<div class="alert alert-info"><strong>/ (index):</strong> Esta ruta muestra la página principal. Obtiene todos los usuarios de Firebase y los muestra en una tabla HTML.</div>',
+                'add': '<div class="alert alert-success"><strong>/add_user:</strong> Esta ruta recibe datos POST del formulario, crea un nuevo usuario en Firebase y redirige a la página principal.</div>',
+                'delete': '<div class="alert alert-danger"><strong>/delete_user/&lt;id&gt;:</strong> Esta ruta elimina un usuario específico de Firebase usando su ID y redirige a la página principal.</div>'
+            };
+            
+            if (value && explanations[value]) {
+                explanation.innerHTML = explanations[value];
+                explanation.style.display = 'block';
+            } else {
+                explanation.style.display = 'none';
+            }
+        }
+
+        function simulateCreate() {
+            const result = document.getElementById('simulationResult');
+            result.innerHTML = '<div class="alert alert-success"><i class="fas fa-check-circle"></i> <strong>Simulación:</strong> Usuario creado exitosamente en Firebase<br><code>ref.child("users").push().set({name: "Ejemplo", email: "ejemplo@test.com"})</code></div>';
+        }
+
+        function simulateRead() {
+            const result = document.getElementById('simulationResult');
+            result.innerHTML = '<div class="alert alert-primary"><i class="fas fa-database"></i> <strong>Simulación:</strong> Datos obtenidos de Firebase<br><code>ref.child("users").get()</code><br><br>Resultado: Lista de usuarios cargada correctamente</div>';
+        }
+
+        function renderTemplate() {
+            const name = document.getElementById('templateName').value || 'Juan';
+            const email = document.getElementById('templateEmail').value || 'juan@example.com';
+            const output = document.getElementById('templateOutput');
+            
+            output.innerHTML = `
+                <div class="code-block">
+                    <strong>Resultado renderizado:</strong><br>
+                    <table class="table table-sm mt-2">
+                        <tr>
+                            <td><strong>${name}</strong></td>
+                            <td>${email}</td>
+                        </tr>
+                    </table>
+                </div>
+            `;
+        }
+
+        function simulateFullFlow() {
+            const simulation = document.getElementById('fullFlowSimulation');
+            simulation.innerHTML = '<div class="alert alert-info"><i class="fas fa-spinner fa-spin"></i> Iniciando simulación...</div>';
+            
+            setTimeout(() => {
+                simulation.innerHTML = `
+                    <div class="alert alert-success">
+                        <h5><i class="fas fa-check-circle"></i> Simulación completada exitosamente</h5>
+                        <ol>
+                            <li>✓ Formulario enviado</li>
+                            <li>✓ POST recibido en /add_user</li>
+                            <li>✓ Datos procesados por Flask</li>
+                            <li>✓ Usuario guardado en Firebase</li>
+                            <li>✓ Redirección a página principal</li>
+                        </ol>
+                    </div>
+                `;
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
+

@@ -1,67 +1,153 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Python Firebase Web App</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <nav class="navbar navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="/">Python Firebase App</a>
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-fire"></i> Python Firebase App
+            </a>
+            <div>
+                <a href="/tutorial" class="btn btn-outline-light btn-sm me-2">
+                    <i class="fas fa-book"></i> Tutorial
+                </a>
+                <a href="/practice" class="btn btn-outline-light btn-sm">
+                    <i class="fas fa-dumbbell"></i> Práctica
+                </a>
+            </div>
         </div>
     </nav>
 
     <div class="container mt-4">
-        <h1>Bienvenido to Firebase Web App</h1>
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'danger' if category == 'error' else 'success' if category == 'success' else 'warning' }} alert-dismissible fade show" role="alert">
+                        <i class="fas fa-{{ 'exclamation-circle' if category == 'error' else 'check-circle' if category == 'success' else 'exclamation-triangle' }}"></i>
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Error Message -->
+        {% if error_message %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="fas fa-exclamation-triangle"></i>
+                <strong>Error de Firebase:</strong> {{ error_message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endif %}
+
+        <!-- Firebase Status -->
+        {% if not firebase_available %}
+            <div class="alert alert-warning" role="alert">
+                <i class="fas fa-info-circle"></i>
+                <strong>Modo Demo:</strong> Firebase no está configurado. La aplicación funciona en modo demo.
+                <br><small>Para habilitar Firebase, configura el archivo <code>testvscode.json</code> y las variables de entorno en <code>.env</code></small>
+            </div>
+        {% endif %}
+
+        <div class="text-center mb-4">
+            <h1><i class="fas fa-home"></i> Bienvenido a Firebase Web App</h1>
+            <p class="lead">Aplicación educativa interactiva con Flask y Firebase</p>
+            
+            <!-- Quick Navigation Cards -->
+            <div class="row mt-4">
+                <div class="col-md-6 mb-3">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-book fa-3x text-primary mb-3"></i>
+                            <h4>Tutorial Interactivo</h4>
+                            <p>Aprende paso a paso cómo funciona esta aplicación</p>
+                            <a href="/tutorial" class="btn btn-primary">
+                                <i class="fas fa-arrow-right"></i> Ir al Tutorial
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-dumbbell fa-3x text-success mb-3"></i>
+                            <h4>Ejercicios Prácticos</h4>
+                            <p>Pon en práctica lo que has aprendido</p>
+                            <a href="/practice" class="btn btn-success">
+                                <i class="fas fa-arrow-right"></i> Ir a Ejercicios
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         
         <!-- Add Data Form -->
-        <div class="card mt-4">
-            <div class="card-header">
-                Add New User
+        <div class="card mt-4 shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <i class="fas fa-user-plus"></i> Añadir Nuevo Usuario
             </div>
             <div class="card-body">
                 <form action="/add_user" method="POST">
                     <div class="mb-3">
-                        <label for="name" class="form-label">Name</label>
+                        <label for="name" class="form-label"><i class="fas fa-user"></i> Nombre</label>
                         <input type="text" class="form-control" id="name" name="name" required>
                     </div>
                     <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
+                        <label for="email" class="form-label"><i class="fas fa-envelope"></i> Email</label>
                         <input type="email" class="form-control" id="email" name="email" required>
                     </div>
-                    <button type="submit" class="btn btn-primary">Add User</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Añadir Usuario
+                    </button>
                 </form>
             </div>
         </div>
 
         <!-- Display Users -->
-        <div class="card mt-4">
-            <div class="card-header">
-                Users List
+        <div class="card mt-4 shadow-sm">
+            <div class="card-header bg-info text-white">
+                <i class="fas fa-users"></i> Lista de Usuarios
+                <span class="badge bg-light text-dark ms-2">{{ users|length }}</span>
             </div>
             <div class="card-body">
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Actions</th>
+                            <th><i class="fas fa-user"></i> Nombre</th>
+                            <th><i class="fas fa-envelope"></i> Email</th>
+                            <th><i class="fas fa-cog"></i> Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for user in users %}
-                        <tr>
-                            <td>{{ user.name }}</td>
-                            <td>{{ user.email }}</td>
-                            <td>
-                                <form action="/delete_user/{{ user.id }}" method="POST" style="display: inline;">
-                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                </form>
-                            </td>
-                        </tr>
-                        {% endfor %}
+                        {% if users %}
+                            {% for user in users %}
+                            <tr>
+                                <td>{{ user.name }}</td>
+                                <td>{{ user.email }}</td>
+                                <td>
+                                    <form action="/delete_user/{{ user.id }}" method="POST" style="display: inline;">
+                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de eliminar este usuario?')">
+                                            <i class="fas fa-trash"></i> Eliminar
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="3" class="text-center text-muted">
+                                    <i class="fas fa-inbox"></i> No hay usuarios registrados. ¡Añade el primero!
+                                </td>
+                            </tr>
+                        {% endif %}
                     </tbody>
                 </table>
             </div>
