@@ -268,20 +268,20 @@
                     
                     <div class="code-block">
                         <strong>Sintaxis Jinja2:</strong><br>
-                        <code>{% for user in users %}</code> - Bucle for<br>
-                        <code>{{ user.name }}</code> - Mostrar variable<br>
-                        <code>{% if condition %}</code> - Condicional
+                        <code>{% raw %}{% for user in users %}{% endraw %}</code> - Bucle for<br>
+                        <code>{% raw %}{{ user.name }}{% endraw %}</code> - Mostrar variable<br>
+                        <code>{% raw %}{% if condition %}{% endraw %}</code> - Condicional
                     </div>
 
                     <h5 class="mt-4">Ejemplo práctico:</h5>
                     <div class="code-block">
                         <pre>&lt;table&gt;
-  {% for user in users %}
+  {% raw %}{% for user in users %}{% endraw %}
   &lt;tr&gt;
-    &lt;td&gt;{{ user.name }}&lt;/td&gt;
-    &lt;td&gt;{{ user.email }}&lt;/td&gt;
+    &lt;td&gt;{% raw %}{{ user.name }}{% endraw %}&lt;/td&gt;
+    &lt;td&gt;{% raw %}{{ user.email }}{% endraw %}&lt;/td&gt;
   &lt;/tr&gt;
-  {% endfor %}
+  {% raw %}{% endfor %}{% endraw %}
 &lt;/table&gt;</pre>
                     </div>
 
