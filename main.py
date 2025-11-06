@@ -65,5 +65,15 @@ def delete_user(user_id):
     ref.child('users').child(user_id).delete()
     return redirect(url_for('index'))
 
+@app.route('/tutorial')
+def tutorial():
+    """Vista interactiva de tutorial paso a paso"""
+    return render_template('tutorial.html')
+
+@app.route('/practice')
+def practice():
+    """Vista interactiva de ejercicios prácticos"""
+    return render_template('practice.html')
+
 if __name__ == "__main__":
     app.run(debug=True) 

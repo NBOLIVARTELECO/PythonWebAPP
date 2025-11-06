@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejercicios Prácticos - Python Firebase Web App</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .exercise-card {
+            margin-bottom: 2rem;
+            transition: transform 0.3s;
+        }
+        .exercise-card:hover {
+            transform: translateY(-5px);
+        }
+        .code-editor {
+            background: #282c34;
+            color: #abb2bf;
+            padding: 1rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            min-height: 150px;
+        }
+        .code-line {
+            margin: 0.25rem 0;
+        }
+        .correct {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+        }
+        .incorrect {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+        }
+        .quiz-option {
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .quiz-option:hover {
+            background: #f8f9fa;
+        }
+        .quiz-option.selected {
+            background: #e7f3ff;
+            border: 2px solid #0d6efd;
+        }
+        .quiz-option.correct-answer {
+            background: #d4edda;
+            border: 2px solid #28a745;
+        }
+        .quiz-option.wrong-answer {
+            background: #f8d7da;
+            border: 2px solid #dc3545;
+        }
+        .progress-bar-custom {
+            height: 30px;
+            border-radius: 15px;
+        }
+        .badge-score {
+            font-size: 1.2rem;
+            padding: 0.5rem 1rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-dumbbell"></i> Ejercicios Prácticos
+            </a>
+            <div>
+                <a href="/" class="btn btn-outline-light btn-sm me-2">Inicio</a>
+                <a href="/tutorial" class="btn btn-outline-light btn-sm">Tutorial</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4 mb-5">
+        <div class="text-center mb-4">
+            <h1><i class="fas fa-code"></i> Ejercicios Interactivos</h1>
+            <p class="lead">Pon en práctica lo que has aprendido</p>
+            
+            <!-- Score Display -->
+            <div class="mt-3">
+                <span class="badge bg-primary badge-score">
+                    <i class="fas fa-star"></i> Puntuación: <span id="score">0</span>/<span id="totalScore">0</span>
+                </span>
+            </div>
+            
+            <!-- Progress Bar -->
+            <div class="progress mt-3 progress-bar-custom">
+                <div class="progress-bar bg-success" role="progressbar" style="width: 0%" id="progressBar">
+                    0%
+                </div>
+            </div>
+        </div>
+
+        <!-- Exercise 1: Multiple Choice -->
+        <div class="card shadow exercise-card">
+            <div class="card-header bg-primary text-white">
+                <h4><i class="fas fa-question-circle"></i> Ejercicio 1: Pregunta Múltiple</h4>
+            </div>
+            <div class="card-body">
+                <h5>¿Qué hace el decorador <code>@app.route('/')</code> en Flask?</h5>
+                <div class="quiz-options mt-3" id="quiz1">
+                    <div class="quiz-option p-3 mb-2 border rounded" data-answer="correct" onclick="selectAnswer(this, 'quiz1', true)">
+                        <strong>A)</strong> Define una ruta URL que mapea a una función
+                    </div>
+                    <div class="quiz-option p-3 mb-2 border rounded" data-answer="wrong" onclick="selectAnswer(this, 'quiz1', false)">
+                        <strong>B)</strong> Inicializa la base de datos Firebase
+                    </div>
+                    <div class="quiz-option p-3 mb-2 border rounded" data-answer="wrong" onclick="selectAnswer(this, 'quiz1', false)">
+                        <strong>C)</strong> Renderiza un template HTML
+                    </div>
+                    <div class="quiz-option p-3 mb-2 border rounded" data-answer="wrong" onclick="selectAnswer(this, 'quiz1', false)">
+                        <strong>D)</strong> Conecta con el servidor web
+                    </div>
+                </div>
+                <div id="quiz1-feedback" class="mt-3"></div>
+            </div>
+        </div>
+
+        <!-- Exercise 2: Code Completion -->
+        <div class="card shadow exercise-card">
+            <div class="card-header bg-success text-white">
+                <h4><i class="fas fa-code"></i> Ejercicio 2: Completar el Código</h4>
+            </div>
+            <div class="card-body">
+                <h5>Completa el código para crear un nuevo usuario en Firebase:</h5>
+                <div class="code-editor mt-3">
+                    <div class="code-line">users_ref = ref.<span class="text-warning">child</span>('users')</div>
+                    <div class="code-line">new_user_ref = users_ref.<span id="code1" class="text-danger" contenteditable="true" onblur="checkCode1(this)">_____</span>()</div>
+                    <div class="code-line">new_user_ref.<span id="code2" class="text-danger" contenteditable="true" onblur="checkCode2(this)">_____</span>({</div>
+                    <div class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;'name': name,</div>
+                    <div class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;'email': email</div>
+                    <div class="code-line">})</div>
+                </div>
+                <div class="mt-3">
+                    <small class="text-muted">Pista: El primer espacio es para crear un nuevo nodo, el segundo para guardar los datos.</small>
+                </div>
+                <div id="code1-feedback" class="mt-3"></div>
+            </div>
+        </div>
+
+        <!-- Exercise 3: True/False -->
+        <div class="card shadow exercise-card">
+            <div class="card-header bg-warning text-dark">
+                <h4><i class="fas fa-check-circle"></i> Ejercicio 3: Verdadero o Falso</h4>
+            </div>
+            <div class="card-body">
+                <h5>Marca si las siguientes afirmaciones son verdaderas o falsas:</h5>
+                
+                <div class="mt-3">
+                    <div class="d-flex justify-content-between align-items-center p-3 border rounded mb-2">
+                        <span><strong>1.</strong> Firebase Realtime Database almacena datos en formato JSON</span>
+                        <div>
+                            <button class="btn btn-sm btn-success me-2" onclick="checkTrueFalse(this, true, 'tf1')">
+                                <i class="fas fa-check"></i> Verdadero
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="checkTrueFalse(this, false, 'tf1')">
+                                <i class="fas fa-times"></i> Falso
+                            </button>
+                        </div>
+                    </div>
+                    <div id="tf1-feedback"></div>
+                </div>
+
+                <div class="mt-3">
+                    <div class="d-flex justify-content-between align-items-center p-3 border rounded mb-2">
+                        <span><strong>2.</strong> Los templates HTML deben estar en la carpeta <code>static/</code></span>
+                        <div>
+                            <button class="btn btn-sm btn-success me-2" onclick="checkTrueFalse(this, false, 'tf2')">
+                                <i class="fas fa-check"></i> Verdadero
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="checkTrueFalse(this, true, 'tf2')">
+                                <i class="fas fa-times"></i> Falso
+                            </button>
+                        </div>
+                    </div>
+                    <div id="tf2-feedback"></div>
+                </div>
+
+                <div class="mt-3">
+                    <div class="d-flex justify-content-between align-items-center p-3 border rounded mb-2">
+                        <span><strong>3.</strong> Flask usa Jinja2 como motor de plantillas</span>
+                        <div>
+                            <button class="btn btn-sm btn-success me-2" onclick="checkTrueFalse(this, true, 'tf3')">
+                                <i class="fas fa-check"></i> Verdadero
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="checkTrueFalse(this, false, 'tf3')">
+                                <i class="fas fa-times"></i> Falso
+                            </button>
+                        </div>
+                    </div>
+                    <div id="tf3-feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Exercise 4: Order the Steps -->
+        <div class="card shadow exercise-card">
+            <div class="card-header bg-info text-white">
+                <h4><i class="fas fa-sort"></i> Ejercicio 4: Ordena los Pasos</h4>
+            </div>
+            <div class="card-body">
+                <h5>Ordena los pasos del flujo cuando se añade un usuario (arrastra y suelta):</h5>
+                <div id="sortable-list" class="mt-3">
+                    <div class="sortable-item p-3 mb-2 border rounded bg-light" draggable="true" data-order="3">
+                        <i class="fas fa-grip-vertical"></i> Flask procesa la petición y guarda en Firebase
+                    </div>
+                    <div class="sortable-item p-3 mb-2 border rounded bg-light" draggable="true" data-order="1">
+                        <i class="fas fa-grip-vertical"></i> Usuario llena el formulario HTML
+                    </div>
+                    <div class="sortable-item p-3 mb-2 border rounded bg-light" draggable="true" data-order="4">
+                        <i class="fas fa-grip-vertical"></i> Usuario es redirigido a la página principal
+                    </div>
+                    <div class="sortable-item p-3 mb-2 border rounded bg-light" draggable="true" data-order="2">
+                        <i class="fas fa-grip-vertical"></i> Formulario envía POST a /add_user
+                    </div>
+                </div>
+                <button class="btn btn-info mt-3" onclick="checkOrder()">
+                    <i class="fas fa-check"></i> Verificar Orden
+                </button>
+                <div id="order-feedback" class="mt-3"></div>
+            </div>
+        </div>
+
+        <!-- Exercise 5: Match Concepts -->
+        <div class="card shadow exercise-card">
+            <div class="card-header bg-danger text-white">
+                <h4><i class="fas fa-link"></i> Ejercicio 5: Relacionar Conceptos</h4>
+            </div>
+            <div class="card-body">
+                <h5>Relaciona cada concepto con su descripción correcta:</h5>
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <h6>Conceptos:</h6>
+                        <div id="concepts" class="mb-3">
+                            <div class="concept-item p-2 mb-2 border rounded bg-light" draggable="true" data-concept="flask">
+                                Flask
+                            </div>
+                            <div class="concept-item p-2 mb-2 border rounded bg-light" draggable="true" data-concept="firebase">
+                                Firebase
+                            </div>
+                            <div class="concept-item p-2 mb-2 border rounded bg-light" draggable="true" data-concept="jinja2">
+                                Jinja2
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Descripciones:</h6>
+                        <div id="descriptions">
+                            <div class="description-item p-2 mb-2 border rounded" data-concept="firebase" ondrop="drop(event)" ondragover="allowDrop(event)">
+                                Base de datos en tiempo real de Google
+                            </div>
+                            <div class="description-item p-2 mb-2 border rounded" data-concept="flask" ondrop="drop(event)" ondragover="allowDrop(event)">
+                                Framework web ligero de Python
+                            </div>
+                            <div class="description-item p-2 mb-2 border rounded" data-concept="jinja2" ondrop="drop(event)" ondragover="allowDrop(event)">
+                                Motor de plantillas para Flask
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-danger mt-3" onclick="checkMatching()">
+                    <i class="fas fa-check"></i> Verificar Relaciones
+                </button>
+                <div id="matching-feedback" class="mt-3"></div>
+            </div>
+        </div>
+
+        <!-- Results Summary -->
+        <div class="card shadow mt-4" id="results-card" style="display: none;">
+            <div class="card-header bg-success text-white">
+                <h4><i class="fas fa-trophy"></i> Resumen de Resultados</h4>
+            </div>
+            <div class="card-body text-center">
+                <h2 id="final-score"></h2>
+                <p id="final-message"></p>
+                <button class="btn btn-primary btn-lg" onclick="resetExercises()">
+                    <i class="fas fa-redo"></i> Reiniciar Ejercicios
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let score = 0;
+        let totalScore = 0;
+        let completedExercises = {
+            quiz1: false,
+            code1: false,
+            tf1: false,
+            tf2: false,
+            tf3: false,
+            order: false,
+            matching: false
+        };
+
+        function updateScore() {
+            document.getElementById('score').textContent = score;
+            document.getElementById('totalScore').textContent = totalScore;
+            const percentage = totalScore > 0 ? Math.round((score / totalScore) * 100) : 0;
+            document.getElementById('progressBar').style.width = percentage + '%';
+            document.getElementById('progressBar').textContent = percentage + '%';
+        }
+
+        function selectAnswer(element, quizId, isCorrect) {
+            if (completedExercises[quizId]) return;
+            
+            const options = document.querySelectorAll(`#${quizId} .quiz-option`);
+            options.forEach(opt => {
+                opt.classList.remove('selected', 'correct-answer', 'wrong-answer');
+            });
+            
+            element.classList.add('selected');
+            
+            const feedback = document.getElementById(`${quizId}-feedback`);
+            
+            if (isCorrect) {
+                element.classList.add('correct-answer');
+                feedback.innerHTML = '<div class="alert alert-success"><i class="fas fa-check-circle"></i> ¡Correcto! El decorador @app.route define una ruta URL que mapea a una función.</div>';
+                score += 10;
+                totalScore += 10;
+                completedExercises[quizId] = true;
+            } else {
+                element.classList.add('wrong-answer');
+                const correctOption = document.querySelector(`#${quizId} .quiz-option[data-answer="correct"]`);
+                correctOption.classList.add('correct-answer');
+                feedback.innerHTML = '<div class="alert alert-danger"><i class="fas fa-times-circle"></i> Incorrecto. La respuesta correcta es A: Define una ruta URL que mapea a una función.</div>';
+                totalScore += 10;
+                completedExercises[quizId] = true;
+            }
+            
+            updateScore();
+        }
+
+        function checkCode1(element) {
+            if (completedExercises.code1) return;
+            
+            const value = element.textContent.trim().toLowerCase();
+            const feedback = document.getElementById('code1-feedback');
+            
+            if (value === 'push') {
+                element.classList.remove('text-danger');
+                element.classList.add('text-success');
+                element.textContent = 'push';
+                feedback.innerHTML = '<div class="alert alert-success"><i class="fas fa-check-circle"></i> ¡Correcto! push() crea un nuevo nodo con un ID único.</div>';
+                score += 5;
+                totalScore += 5;
+                completedExercises.code1 = true;
+            } else {
+                feedback.innerHTML = '<div class="alert alert-warning"><i class="fas fa-exclamation-circle"></i> Intenta con "push" - crea un nuevo nodo en Firebase.</div>';
+            }
+            updateScore();
+        }
+
+        function checkCode2(element) {
+            if (completedExercises.code1) {
+                const value = element.textContent.trim().toLowerCase();
+                const feedback = document.getElementById('code1-feedback');
+                
+                if (value === 'set') {
+                    element.classList.remove('text-danger');
+                    element.classList.add('text-success');
+                    element.textContent = 'set';
+                    feedback.innerHTML = '<div class="alert alert-success"><i class="fas fa-check-circle"></i> ¡Perfecto! set() guarda los datos en Firebase.</div>';
+                    score += 5;
+                    totalScore += 5;
+                } else {
+                    feedback.innerHTML = '<div class="alert alert-warning"><i class="fas fa-exclamation-circle"></i> Intenta con "set" - guarda los datos en el nodo.</div>';
+                }
+                updateScore();
+            }
+        }
+
+        function checkTrueFalse(button, isCorrect, exerciseId) {
+            if (completedExercises[exerciseId]) return;
+            
+            const feedback = document.getElementById(`${exerciseId}-feedback`);
+            const buttons = button.parentElement.querySelectorAll('button');
+            
+            buttons.forEach(btn => {
+                btn.disabled = true;
+                btn.classList.remove('btn-success', 'btn-danger');
+                btn.classList.add('btn-secondary');
+            });
+            
+            if (isCorrect) {
+                button.classList.remove('btn-secondary');
+                button.classList.add('btn-success');
+                feedback.innerHTML = '<div class="alert alert-success"><i class="fas fa-check-circle"></i> ¡Correcto!</div>';
+                score += 10;
+                totalScore += 10;
+            } else {
+                button.classList.remove('btn-secondary');
+                button.classList.add('btn-danger');
+                feedback.innerHTML = '<div class="alert alert-danger"><i class="fas fa-times-circle"></i> Incorrecto. La respuesta correcta es la opción contraria.</div>';
+                totalScore += 10;
+            }
+            
+            completedExercises[exerciseId] = true;
+            updateScore();
+        }
+
+        // Drag and Drop for sorting
+        let draggedElement = null;
+
+        document.querySelectorAll('.sortable-item').forEach(item => {
+            item.addEventListener('dragstart', function(e) {
+                draggedElement = this;
+                this.style.opacity = '0.5';
+            });
+            
+            item.addEventListener('dragend', function(e) {
+                this.style.opacity = '1';
+            });
+            
+            item.addEventListener('dragover', function(e) {
+                e.preventDefault();
+            });
+            
+            item.addEventListener('drop', function(e) {
+                e.preventDefault();
+                if (draggedElement && draggedElement !== this) {
+                    const list = this.parentElement;
+                    const allItems = Array.from(list.children);
+                    const draggedIndex = allItems.indexOf(draggedElement);
+                    const targetIndex = allItems.indexOf(this);
+                    
+                    if (draggedIndex < targetIndex) {
+                        list.insertBefore(draggedElement, this.nextSibling);
+                    } else {
+                        list.insertBefore(draggedElement, this);
+                    }
+                }
+            });
+        });
+
+        function checkOrder() {
+            if (completedExercises.order) return;
+            
+            const items = document.querySelectorAll('.sortable-item');
+            let isCorrect = true;
+            
+            items.forEach((item, index) => {
+                const correctOrder = parseInt(item.dataset.order);
+                if (index + 1 !== correctOrder) {
+                    isCorrect = false;
+                }
+            });
+            
+            const feedback = document.getElementById('order-feedback');
+            
+            if (isCorrect) {
+                feedback.innerHTML = '<div class="alert alert-success"><i class="fas fa-check-circle"></i> ¡Perfecto! Has ordenado los pasos correctamente.</div>';
+                items.forEach(item => {
+                    item.classList.add('correct');
+                });
+                score += 15;
+                totalScore += 15;
+                completedExercises.order = true;
+            } else {
+                feedback.innerHTML = '<div class="alert alert-danger"><i class="fas fa-times-circle"></i> El orden no es correcto. Intenta de nuevo.</div>';
+                totalScore += 15;
+            }
+            
+            updateScore();
+        }
+
+        // Drag and Drop for matching
+        function allowDrop(ev) {
+            ev.preventDefault();
+        }
+
+        function drop(ev) {
+            ev.preventDefault();
+            const concept = ev.dataTransfer.getData("text");
+            const conceptElement = document.querySelector(`[data-concept="${concept}"]`);
+            const description = ev.currentTarget;
+            
+            if (conceptElement && conceptElement.classList.contains('concept-item')) {
+                if (concept === description.dataset.concept) {
+                    description.style.background = '#d4edda';
+                    description.innerHTML = conceptElement.textContent + ' - ' + description.textContent;
+                    conceptElement.style.display = 'none';
+                } else {
+                    description.style.background = '#f8d7da';
+                    setTimeout(() => {
+                        description.style.background = '';
+                    }, 1000);
+                }
+            }
+        }
+
+        document.querySelectorAll('.concept-item').forEach(item => {
+            item.addEventListener('dragstart', function(e) {
+                e.dataTransfer.setData("text", this.dataset.concept);
+            });
+        });
+
+        function checkMatching() {
+            if (completedExercises.matching) return;
+            
+            const descriptions = document.querySelectorAll('.description-item');
+            let allCorrect = true;
+            
+            descriptions.forEach(desc => {
+                const concept = desc.dataset.concept;
+                const conceptElement = document.querySelector(`.concept-item[data-concept="${concept}"]`);
+                
+                if (conceptElement && conceptElement.style.display === 'none') {
+                    desc.classList.add('correct');
+                } else {
+                    allCorrect = false;
+                }
+            });
+            
+            const feedback = document.getElementById('matching-feedback');
+            
+            if (allCorrect) {
+                feedback.innerHTML = '<div class="alert alert-success"><i class="fas fa-check-circle"></i> ¡Excelente! Todas las relaciones son correctas.</div>';
+                score += 20;
+                totalScore += 20;
+                completedExercises.matching = true;
+            } else {
+                feedback.innerHTML = '<div class="alert alert-warning"><i class="fas fa-exclamation-circle"></i> Algunas relaciones no son correctas. Intenta de nuevo.</div>';
+                totalScore += 20;
+            }
+            
+            updateScore();
+            checkFinalResults();
+        }
+
+        function checkFinalResults() {
+            const allCompleted = Object.values(completedExercises).every(v => v === true);
+            
+            if (allCompleted) {
+                const percentage = Math.round((score / totalScore) * 100);
+                const resultsCard = document.getElementById('results-card');
+                const finalScore = document.getElementById('final-score');
+                const finalMessage = document.getElementById('final-message');
+                
+                resultsCard.style.display = 'block';
+                finalScore.textContent = `Puntuación Final: ${score}/${totalScore} (${percentage}%)`;
+                
+                if (percentage >= 90) {
+                    finalMessage.innerHTML = '<p class="text-success"><i class="fas fa-trophy"></i> ¡Excelente trabajo! Dominas los conceptos.</p>';
+                } else if (percentage >= 70) {
+                    finalMessage.innerHTML = '<p class="text-info"><i class="fas fa-star"></i> ¡Buen trabajo! Sigue practicando.</p>';
+                } else {
+                    finalMessage.innerHTML = '<p class="text-warning"><i class="fas fa-book"></i> Sigue estudiando. Revisa el tutorial.</p>';
+                }
+                
+                resultsCard.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        function resetExercises() {
+            location.reload();
+        }
+
+        // Initialize
+        updateScore();
+    </script>
+</body>
+</html>
+
