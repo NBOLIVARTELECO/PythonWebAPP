@@ -10,7 +10,7 @@ load_dotenv()
 
 # Initialize Flask
 app = Flask(__name__)
-app.secret_key = os.getenv('SECRET_KEY')  # Get secret key from .env
+#app.secret_key = os.getenv('SECRET_KEY')  # Get secret key from .env
 
 def initialize_firebase():
     """Initialize Firebase Admin SDK"""
